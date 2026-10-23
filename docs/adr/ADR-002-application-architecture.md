@@ -34,6 +34,10 @@ Projects are owned by the authenticated user in the first slice. Every project r
 
 Entity Framework Core with the Npgsql provider maps the Identity schema and application entities to PostgreSQL. Database changes are committed as EF Core migrations. Local credentials are stored with .NET user secrets; no password or connection string with credentials is committed.
 
+### Test runner
+
+The solution uses xUnit v3 with the native Microsoft Testing Platform integration selected in `global.json`. The .NET 10 SDK requires this selection for `dotnet test` to run xUnit v3 through its native test experience.
+
 ## Consequences
 
 - The first executable path is registration/sign-in, then creating and listing the signed-in user's projects.

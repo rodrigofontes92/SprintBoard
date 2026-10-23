@@ -35,6 +35,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.Name = "__Host-SprintBoard.Session";
     options.Cookie.HttpOnly = true;
+    options.Cookie.Path = "/";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.SlidingExpiration = true;
@@ -56,11 +57,12 @@ builder.Services.AddAntiforgery(options =>
     options.HeaderName = "X-CSRF-TOKEN";
     options.Cookie.Name = "__Host-SprintBoard.Antiforgery";
     options.Cookie.HttpOnly = true;
+    options.Cookie.Path = "/";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.Strict;
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

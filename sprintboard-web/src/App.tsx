@@ -5,6 +5,14 @@ type User = { id: string; email: string }
 type Project = { id: string; name: string; description: string | null; createdAt: string }
 type AuthMode = 'login' | 'register'
 
+const requestAntiforgeryToken = async () => {
+  const response = await fetch('/api/auth/antiforgery', { credentials: 'include' })
+  if (!response.ok) throw new Error('The API could not issue an antiforgery token.')
+  const body = await response.json() as { requestToken?: string }
+  if (!body.requestToken) throw new Error('The API returned an empty antiforgery token.')
+  return body.requestToken
+}
+
 const errorMessage = async (response: Response) => {
   const body = await response.json().catch(() => null) as
     | { error?: string; title?: string; detail?: string; errors?: Record<string, string[]> }
@@ -28,11 +36,7 @@ export default function App() {
 
   useEffect(() => {
     const initialize = async () => {
-      const tokenResponse = await fetch('/api/auth/antiforgery', { credentials: 'include' })
-      if (!tokenResponse.ok) throw new Error('The API could not issue an antiforgery token.')
-      const tokenBody = await tokenResponse.json() as { requestToken?: string }
-      if (!tokenBody.requestToken) throw new Error('The API returned an empty antiforgery token.')
-      setAntiforgeryToken(tokenBody.requestToken)
+      setAntiforgeryToken(await requestAntiforgeryToken())
 
       const userResponse = await fetch('/api/auth/me', { credentials: 'include' })
       if (userResponse.ok) {
@@ -77,6 +81,7 @@ export default function App() {
       if (!response.ok) throw new Error(await errorMessage(response))
 
       setUser(await response.json() as User)
+      setAntiforgeryToken(await requestAntiforgeryToken())
       await loadProjects()
       formElement.reset()
     } catch (error) {
@@ -128,6 +133,7 @@ export default function App() {
         headers: { 'X-CSRF-TOKEN': antiforgeryToken },
       })
       if (!response.ok) throw new Error(await errorMessage(response))
+      setAntiforgeryToken(await requestAntiforgeryToken())
       setUser(null)
       setProjects([])
     } catch (error) {

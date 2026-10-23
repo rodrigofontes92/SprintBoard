@@ -85,6 +85,14 @@ dotnet publish .\SprintBoard.Api\SprintBoard.Api.csproj --configuration Release
 
 Outside Development, ASP.NET Core serves the React files from the same origin as the API. Configure HTTPS and the connection string in the hosting environment before deployment.
 
+## Run the API tests
+
+```powershell
+dotnet test --project .\tests\SprintBoard.Api.Tests\SprintBoard.Api.Tests.csproj --configuration Release
+```
+
+The API integration tests use a temporary SQLite database. Local development and deployment use PostgreSQL.
+
 ## Current scope
 
 - Users can register, sign in, sign out, and inspect their session.
