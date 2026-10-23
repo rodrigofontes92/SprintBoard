@@ -1,0 +1,27 @@
+# .NET build output
+**/bin/
+**/obj/
+**/TestResults/
+**/wwwroot/
+
+# Frontend dependencies and generated files
+**/node_modules/
+**/.vite/
+
+# Local configuration and secrets
+**/appsettings.*.local.json
+**/.env
+**/.env.*
+!**/.env.example
+.dotnet-home/
+.nuget/
+.npm-cache/
+
+# IDE and operating system files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+Thumbs.db
+Desktop.ini
