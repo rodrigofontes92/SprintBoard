@@ -16,6 +16,7 @@
 .dotnet-home/
 .nuget/
 .npm-cache/
+artifacts/
 
 # IDE and operating system files
 .vs/

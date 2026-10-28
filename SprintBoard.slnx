@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/SprintBoard.Api.Tests/SprintBoard.Api.Tests.csproj" />
+  </Folder>
+  <Project Path="SprintBoard.Api/SprintBoard.Api.csproj" />
+</Solution>
