@@ -18,6 +18,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
         {
             entity.Property(project => project.Name).HasMaxLength(120).IsRequired();
             entity.Property(project => project.Description).HasMaxLength(2_000);
+            entity.Property(project => project.UpdatedAt).IsRequired();
             entity.HasIndex(project => new { project.OwnerId, project.Name }).IsUnique();
             entity.HasOne(project => project.Owner)
                 .WithMany()
