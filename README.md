@@ -52,12 +52,24 @@ From the repository root:
 
 ```powershell
 dotnet tool restore
-dotnet ef migrations add InitialCreate --project .\SprintBoard.Api\SprintBoard.Api.csproj
 dotnet ef database update --project .\SprintBoard.Api\SprintBoard.Api.csproj
 dotnet run --project .\SprintBoard.Api\SprintBoard.Api.csproj --launch-profile http
 ```
 
 The API listens on `http://localhost:5079`. Its OpenAPI document is available at `/openapi/v1.json` in Development.
+
+The repository includes the initial migration and the project update migration. Apply them with `dotnet ef database update`; do not create another `InitialCreate` migration.
+
+### Optional development demo data
+
+Demo seeding is disabled by default and runs only in the Development environment. To create the fictional `demo@sprintboard.local` account and two sample projects, set a development-only password in user-secrets and enable the seed:
+
+```powershell
+dotnet user-secrets set --project .\SprintBoard.Api\SprintBoard.Api.csproj "DemoSeed:Password" "<strong-local-demo-password>"
+dotnet user-secrets set --project .\SprintBoard.Api\SprintBoard.Api.csproj "DemoSeed:Enabled" "true"
+```
+
+After applying migrations, start the API once. Seeding is idempotent: it creates the demo account and sample projects only when they do not already exist. Do not put the demo password in source control or use the demo account in a deployed environment.
 
 ## Run the React application
 
@@ -96,6 +108,6 @@ The API integration tests use a temporary SQLite database. Local development and
 ## Current scope
 
 - Users can register, sign in, sign out, and inspect their session.
-- Each authenticated user can create and list only their own projects.
+- Each authenticated user can create, list, read, edit, and delete only their own projects.
 - State-changing browser requests use an antiforgery token.
 - Project sharing, tasks, Kanban workflows, email confirmation, hosting, and production account recovery are later project work.

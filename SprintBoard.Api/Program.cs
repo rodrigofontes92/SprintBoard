@@ -83,6 +83,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+if (app.Environment.IsDevelopment())
+{
+    await SprintBoard.Api.Data.DemoDataSeeder.SeedAsync(app.Services, app.Configuration);
+}
+
 app.Run();
 
 public partial class Program
