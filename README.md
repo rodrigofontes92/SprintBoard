@@ -58,7 +58,21 @@ dotnet run --project .\SprintBoard.Api\SprintBoard.Api.csproj --launch-profile h
 
 The API listens on `http://localhost:5079`. Its OpenAPI document is available at `/openapi/v1.json` in Development.
 
-The repository includes the initial migration and the project update migration. Apply them with `dotnet ef database update`; do not create another `InitialCreate` migration.
+### Project task API
+
+Tasks are accessed through their parent project. All routes require an authenticated session, and `POST`, `PUT`, and `DELETE` requests require the antiforgery token in `X-CSRF-TOKEN`.
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/projects/{projectId}/tasks` | List tasks in an owned project |
+| `GET` | `/api/projects/{projectId}/tasks/{taskId}` | Read one task |
+| `POST` | `/api/projects/{projectId}/tasks` | Create a task in an owned project |
+| `PUT` | `/api/projects/{projectId}/tasks/{taskId}` | Edit a task and request a status transition |
+| `DELETE` | `/api/projects/{projectId}/tasks/{taskId}` | Delete a task |
+
+Task statuses are returned as strings: `todo`, `inProgress`, or `done`. Tasks start as `todo`; allowed transitions are `todo` to `inProgress`, `inProgress` to `todo` or `done`, and `done` back to `inProgress`. Priorities are `low`, `medium`, and `high`. Task access is always checked against the owning project.
+
+The repository includes the initial migration, the project update migration, and the project task migration. Apply them with `dotnet ef database update`; do not create another `InitialCreate` migration.
 
 ### Optional development demo data
 
@@ -110,4 +124,4 @@ The API integration tests use a temporary SQLite database. Local development and
 - Users can register, sign in, sign out, and inspect their session.
 - Each authenticated user can create, list, read, edit, and delete only their own projects.
 - State-changing browser requests use an antiforgery token.
-- Project sharing, tasks, Kanban workflows, email confirmation, hosting, and production account recovery are later project work.
+- Project sharing, Kanban workflows, email confirmation, hosting, and production account recovery are later project work.

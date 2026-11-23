@@ -15,4 +15,6 @@ public sealed class WorkspaceProject
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    public ICollection<ProjectTask> Tasks { get; } = new List<ProjectTask>();
 }

@@ -217,6 +217,55 @@ namespace SprintBoard.Api.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("SprintBoard.Api.Models.ProjectTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateOnly?>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("character varying(160)");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId", "Status", "DueDate");
+
+                    b.ToTable("ProjectTasks", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_ProjectTasks_Priority", "\"Priority\" IN ('Low', 'Medium', 'High')");
+
+                            t.HasCheckConstraint("CK_ProjectTasks_Status", "\"Status\" IN ('Todo', 'InProgress', 'Done')");
+                        });
+                });
+
             modelBuilder.Entity("SprintBoard.Api.Models.WorkspaceProject", b =>
                 {
                     b.Property<Guid>("Id")
@@ -300,6 +349,17 @@ namespace SprintBoard.Api.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SprintBoard.Api.Models.ProjectTask", b =>
+                {
+                    b.HasOne("SprintBoard.Api.Models.WorkspaceProject", "Project")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("SprintBoard.Api.Models.WorkspaceProject", b =>
                 {
                     b.HasOne("SprintBoard.Api.Models.AppUser", "Owner")
@@ -309,6 +369,11 @@ namespace SprintBoard.Api.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("SprintBoard.Api.Models.WorkspaceProject", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }
