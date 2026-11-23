@@ -1,0 +1,58 @@
+name: Build and test
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: sprintboard-web/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: sprintboard-web
+        run: npm ci
+
+      - name: Check frontend types
+        working-directory: sprintboard-web
+        run: npm run check
+
+      - name: Build frontend
+        working-directory: sprintboard-web
+        run: npm run build
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore .NET dependencies
+        run: dotnet restore tests/SprintBoard.Api.Tests/SprintBoard.Api.Tests.csproj
+
+      - name: Build API
+        run: dotnet build SprintBoard.Api/SprintBoard.Api.csproj --configuration Release --no-restore
+
+      - name: Run API tests
+        run: dotnet test --project tests/SprintBoard.Api.Tests/SprintBoard.Api.Tests.csproj --configuration Release --no-restore
