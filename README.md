@@ -119,6 +119,8 @@ dotnet test --project .\tests\SprintBoard.Api.Tests\SprintBoard.Api.Tests.csproj
 
 The API integration tests use a temporary SQLite database. Local development and deployment use PostgreSQL.
 
+GitHub Actions runs the frontend check and build, the .NET Release build, and the API tests on pushes and pull requests targeting `develop` or `main`. After the workflow reaches the default branch, it can also be started manually from the Actions tab.
+
 ## Current scope
 
 - Users can register, sign in, sign out, and inspect their session.
