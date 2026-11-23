@@ -1,0 +1,10 @@
+@baseUrl = http://localhost:5079
+
+### Request an antiforgery token before sending a state-changing request.
+GET {{baseUrl}}/api/auth/antiforgery
+
+### Check the current session.
+GET {{baseUrl}}/api/auth/me
+
+### List projects owned by the signed-in user.
+GET {{baseUrl}}/api/projects
